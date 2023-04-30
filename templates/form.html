@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Registrazione libri</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='a.ico') }}">
+
+    <style>
+        body {
+  background-image: url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+      /* Stili per il form di inserimento del libro */
+      form {
+        display: flex;
+        flex-direction: column;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      label {
+        margin-top: 1rem;
+      }
+
+      input, button {
+        font-size: 1rem;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        border: 1px solid #ccc;
+        margin-top: 0.5rem;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      /* Stili per la home page della biblioteca */
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      li {
+        flex-basis: calc(20% - 2rem); /* Cambia la percentuale a seconda delle tue esigenze */
+        flex-grow: 1;
+        max-width: calc(20% - 2rem); /* Cambia la percentuale a seconda delle tue esigenze */
+        margin: 0.5rem;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+      }
+
+      img {
+        max-width: 40%;
+        height: auto;
+        margin: 0.5rem auto;
+        display: block;
+      }
+      h1 {
+  font-size: 3em;
+  text-align: center;
+  color: #512dd4;
+  text-shadow: 2px 2px #000;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 2px;
+  margin-top: 80px;
+  margin-bottom: 50px;
+}
+
+      h2 {
+        font-size: 1.25rem;
+        margin: 0.5rem 0;
+      }
+
+      p {
+        font-size: 1rem;
+        margin: 0.5rem 0;
+      }
+
+      a {
+        font-size: 1rem;
+        color: #4caf50;
+        text-decoration: none;
+      }
+      .button {	
+   
+    top: 50%;
+    background-color: #0a0a23;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 0px 2px 2px rgb(0,0,0);
+  }
+    </style>
+  </head>
+  <body>
+
+    <header>
+      
+      <h1>Registrazione libri</h1>
+    </header>
+<!-- https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1 -->
+    <main>
+        <form method="POST" action="/add-book">
+            <label for="title" style="color: rgb(247, 242, 0); font-size: 24px;">Titolo:</label>
+          <input type="text" id="title" name="title" required>
+    
+          <label for="author"style="color: red; font-size: 24px;">Autore:</label>
+          <input type="text" id="author" name="author" required>
+    
+          <label for="isbn" style="color: rgb(3, 226, 3); font-size: 24px;">Link lettura libro:</label>
+          <input type="url" id="isbn" name="isbn" required>
+    
+          <label for="cover" style="color: blue; font-size: 24px;">URL dell'immagine di copertina:</label>
+          <input type="url" id="cover" name="cover" required>
+          <br>
+          <button type="submit">Salva libri</button> <br>
+          <button type="button" onclick="window.location.href='/'">Indietro</button>
+   
+        <ul id="book-list"></ul>
+
+      
+        </form>
+<br><br>
+      </main>
+      <form id="delete-book-form" action="/delete-book" method="POST">
+        <label for="title" style="color: rgb(230, 12, 12); font-size: 25px;" >Titolo:</label>
+        <input type="text" name="title" id="title" placeholder="Inserisci il tiolo del libro"><br>
+        <button type="button" class="btn btn-danger" id="delete-book-btn">Elimina libro</button>
+      </form>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script>
+      $(document).ready(function() {
+        // gestisce il clic sul pulsante di eliminazione del libro
+        $('#delete-book-btn').on('click', function(event) {
+          // previene il comportamento predefinito del pulsante
+          event.preventDefault();
+      
+          // invia la richiesta al server
+          $.ajax({
+            url: '/delete-book',
+            type: 'POST',
+            data: $('#delete-book-form').serialize(),
+            success: function(response) {
+              // mostra il messaggio di successo in un alert
+              window.alert(response.message);
+              // reindirizza l'utente alla pagina di form
+              window.location.href = '/form';
+            },
+            error: function(response) {
+              // mostra il messaggio di errore in un alert
+              window.alert(response.responseJSON.message);
+              // reindirizza l'utente alla pagina di form
+              window.location.href = response.responseJSON.redirect;
+            }
+          });
+        });
+      });
+      </script>
+
+  
+  </body>
+</html>
